@@ -1,6 +1,10 @@
 import ctypes
 import os
-import _winreg
+
+try:
+    import _winreg
+except ImportError:
+    import fake_winreg as _winreg  # so that the tests can pass on Linux (Travis CI)
 
 
 class RailDriver(object):
