@@ -1,0 +1,18 @@
+version: 0.0.{build}
+
+install:
+- cmd: >-
+    SET PYTHON=C:\\Python27
+
+    SET PYTHONUSERBASE=venv
+
+    SET PATH=venv\\Scripts;%PYTHON%;%PYTHON%\\Scripts;%PATH%
+
+    pip install --user -U pip setuptools
+
+    pip install --user -r test_requirements.txt
+
+build: off
+
+test_script:
+- cmd: nosetests.exe
