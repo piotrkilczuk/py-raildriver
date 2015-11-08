@@ -29,9 +29,7 @@ setuptools.setup(
     classifiers=CLASSIFIERS,
     install_requires=[
     ],
-    tests_require=[
-        'nose'
-    ],
+    tests_require=open('test_requirements.txt').read(),
     packages=setuptools.find_packages(),
     # package_data={'raildriver': package_data},
     include_package_data=False,
