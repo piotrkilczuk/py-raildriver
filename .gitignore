@@ -3,4 +3,5 @@
 *.pyc
 /.eggs/
 /*.egg-info/
+/dist/
 /venv/
