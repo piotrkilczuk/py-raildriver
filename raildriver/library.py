@@ -44,7 +44,7 @@ class RailDriver(object):
         for idx, n in self.get_controller_list():
             if n == name:
                 return idx
-        raise ValueError('Controller index not found for {}'.format(index_or_name))
+        raise ValueError('Controller index not found for {}'.format(name))
 
     def get_controller_list(self):
         """
