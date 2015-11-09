@@ -66,6 +66,15 @@ class RailDriverGetCurrentControllerValue(AbstractRaildriverDllTestCase):
                 mock_gcv.assert_called_with(1, 0)
 
 
+class RailDriverGetCurrentCoordinates(AbstractRaildriverDllTestCase):
+
+    def test_get(self):
+        with mock.patch.object(self.mock_dll, 'GetControllerValue', side_effect=[51.50, -0.13]) as mock_gcv:
+            self.assertEqual(self.raildriver.get_current_coordinates(), (51.50, -0.13))
+            mock_gcv.assert_any_call(400, 0)
+            mock_gcv.assert_any_call(401, 0)
+
+
 class RailDriverGetLocoNameTestCase(AbstractRaildriverDllTestCase):
 
     def test_returns_list_if_ready(self):

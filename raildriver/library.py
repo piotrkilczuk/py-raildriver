@@ -92,6 +92,14 @@ class RailDriver(object):
         """
         return self.get_controller_value(index_or_name, VALUE_CURRENT)
 
+    def get_current_coordinates(self):
+        """
+        Get current geocoordinates (lat, lon) of train
+
+        :return: tuple (lat, lon)
+        """
+        return self.get_current_controller_value(400), self.get_current_controller_value(401)
+
     def get_loco_name(self):
         """
         Returns the Provider, Product and Engine name.
