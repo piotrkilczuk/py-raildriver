@@ -52,6 +52,20 @@ class RailDriverGetControllerValueTestCase(AbstractRaildriverDllTestCase):
                                   'Pantograph', raildriver.VALUE_CURRENT)
 
 
+class RailDriverGetCurrentControllerValue(AbstractRaildriverDllTestCase):
+
+    def test_get_by_index(self):
+        with mock.patch.object(self.mock_dll, 'GetControllerValue', return_value=0.5) as mock_gcv:
+            self.assertEqual(self.raildriver.get_current_controller_value(1), 0.5)
+            mock_gcv.assert_called_with(1, 0)
+
+    def test_get_by_name(self):
+        with mock.patch.object(self.mock_dll, 'GetControllerValue', return_value=0.5) as mock_gcv:
+            with mock.patch.object(self.mock_dll, 'GetControllerList', return_value='Active::Throttle::Brake::Reverser'):
+                self.assertEqual(self.raildriver.get_current_controller_value('Throttle'), 0.5)
+                mock_gcv.assert_called_with(1, 0)
+
+
 class RailDriverGetLocoNameTestCase(AbstractRaildriverDllTestCase):
 
     def test_returns_list_if_ready(self):

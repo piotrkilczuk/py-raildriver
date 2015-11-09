@@ -66,6 +66,7 @@ class RailDriver(object):
 
         :param index_or_name integer index or string name
         :param value_type one of VALUE_CURRENT, VALUE_MIN, VALUE_MAX
+        :return float
         """
         index = None
         if not isinstance(index_or_name, int):
@@ -80,6 +81,15 @@ class RailDriver(object):
             raise ValueError('Controller index not found for {}'.format(index_or_name))
 
         return self.dll.GetControllerValue(index, value_type)
+
+    def get_current_controller_value(self, index_or_name):
+        """
+        Syntactic sugar for get_controller_value(index_or_name, VALUE_CURRENT)
+
+        :param index_or_name integer index or string name
+        :return: float
+        """
+        return self.get_controller_value(index_or_name, VALUE_CURRENT)
 
     def get_loco_name(self):
         """
