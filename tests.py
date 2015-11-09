@@ -1,3 +1,4 @@
+import datetime
 import unittest
 
 import mock
@@ -105,6 +106,16 @@ class RailDriverGetCurrentHeadingTestCase(AbstractRaildriverDllTestCase):
         with mock.patch.object(self.mock_dll, 'GetControllerValue', return_value=0.1) as mock_gcv:
             self.assertEqual(self.raildriver.get_current_heading(), 0.1)
             mock_gcv.assert_called_with(405, 0)
+
+
+class RailDriverGetCurrentTime(AbstractRaildriverDllTestCase):
+
+    def test_get(self):
+        with mock.patch.object(self.mock_dll, 'GetControllerValue', side_effect=[12, 30, 0]) as mock_gcv:
+            self.assertEqual(self.raildriver.get_current_time(), datetime.time(12, 30, 0))
+            mock_gcv.assert_any_call(406, 0)
+            mock_gcv.assert_any_call(407, 0)
+            mock_gcv.assert_any_call(408, 0)
 
 
 class RailDriverGetLocoNameTestCase(AbstractRaildriverDllTestCase):

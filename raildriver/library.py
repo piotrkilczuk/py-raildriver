@@ -1,4 +1,5 @@
 import ctypes
+import datetime
 import os
 import _winreg
 
@@ -128,6 +129,15 @@ class RailDriver(object):
         :return: bool
         """
         return bool(self.get_current_controller_value(403))
+
+    def get_current_time(self):
+        """
+        Get current time
+
+        :return: datetime.time
+        """
+        hms = [int(self.get_current_controller_value(i)) for i in range(406, 409)]
+        return datetime.time(*hms)
 
     def get_loco_name(self):
         """
