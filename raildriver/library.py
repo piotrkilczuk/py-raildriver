@@ -39,6 +39,11 @@ class RailDriver(object):
     def __repr__(self):
         return 'raildriver.RailDriver: {}'.format(self.dll)
 
+    def get_controller_index(self, name):
+        for idx, n in self.get_controller_list():
+            if n == name:
+                return idx
+
     def get_controller_list(self):
         """
         Returns an iterable of tuples containing (index, controller_name) pairs.
@@ -68,12 +73,8 @@ class RailDriver(object):
         :param value_type one of VALUE_CURRENT, VALUE_MIN, VALUE_MAX
         :return float
         """
-        index = None
         if not isinstance(index_or_name, int):
-            for idx, name in self.get_controller_list():
-                if name == index_or_name:
-                    index = idx
-                    break
+            index = self.get_controller_index(index_or_name)
         else:
             index = index_or_name
 
@@ -119,3 +120,16 @@ class RailDriver(object):
         :return: float
         """
         return self.get_controller_value(index_or_name, VALUE_MIN)
+
+    def set_controller_value(self, index_or_name, value):
+        """
+        Sets controller value
+
+        :param index_or_name integer index or string name
+        :param value float
+        """
+        if not isinstance(index_or_name, int):
+            index = self.get_controller_index(index_or_name)
+        else:
+            index = index_or_name
+        self.dll.SetControllerValue(index, value)
