@@ -32,6 +32,26 @@ class RailDriverGetControllerListTestCase(AbstractRaildriverDllTestCase):
             self.assertEqual(list(self.raildriver.get_controller_list()), [])
 
 
+class RailDriverGetControllerValueTestCase(AbstractRaildriverDllTestCase):
+
+    def test_get_by_index(self):
+        with mock.patch.object(self.mock_dll, 'GetControllerValue', return_value=0.5) as mock_gcv:
+            self.assertEqual(self.raildriver.get_controller_value(1, raildriver.VALUE_CURRENT), 0.5)
+            mock_gcv.assert_called_with(1, 0)
+
+    def test_get_by_name_exists(self):
+        with mock.patch.object(self.mock_dll, 'GetControllerValue', return_value=0.5) as mock_gcv:
+            with mock.patch.object(self.mock_dll, 'GetControllerList', return_value='Active::Throttle::Brake::Reverser'):
+                self.assertEqual(self.raildriver.get_controller_value('Throttle', raildriver.VALUE_CURRENT), 0.5)
+                mock_gcv.assert_called_with(1, 0)
+
+    def test_get_by_name_does_not_exist(self):
+        with mock.patch.object(self.mock_dll, 'GetControllerValue', return_value=0.5) as mock_gcv:
+            with mock.patch.object(self.mock_dll, 'GetControllerList', return_value='Active::Throttle::Brake::Reverser'):
+                self.assertRaises(ValueError, self.raildriver.get_controller_value,
+                                  'Pantograph', raildriver.VALUE_CURRENT)
+
+
 class RailDriverGetLocoNameTestCase(AbstractRaildriverDllTestCase):
 
     def test_returns_list_if_ready(self):

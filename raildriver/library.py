@@ -3,6 +3,11 @@ import os
 import _winreg
 
 
+VALUE_CURRENT = 0
+VALUE_MIN = 1
+VALUE_MAX = 2
+
+
 class RailDriver(object):
 
     dll = None
@@ -50,6 +55,31 @@ class RailDriver(object):
         if not ret_str:
             return []
         return enumerate(ret_str.split('::'))
+
+    def get_controller_value(self, index_or_name, value_type):
+        """
+        Returns current/min/max value of controller at given index or name.
+
+        It is much more efficient to query using an integer index rather than string name.
+        Name is fine for seldom updates but it's not advised to be used every second or so.
+        See `get_controller_list` for an example how to cache a dictionary of {name: index} pairs.
+
+        :param index_or_name integer index or string name
+        :param value_type one of VALUE_CURRENT, VALUE_MIN, VALUE_MAX
+        """
+        index = None
+        if not isinstance(index_or_name, int):
+            for idx, name in self.get_controller_list():
+                if name == index_or_name:
+                    index = idx
+                    break
+        else:
+            index = index_or_name
+
+        if index is None:
+            raise ValueError('Controller index not found for {}'.format(index_or_name))
+
+        return self.dll.GetControllerValue(index, value_type)
 
     def get_loco_name(self):
         """
