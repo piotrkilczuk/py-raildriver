@@ -7,6 +7,12 @@ class RailDriver(object):
 
     dll = None
 
+    _restypes = {
+        'GetControllerList': ctypes.c_char_p,
+        'GetLocoName': ctypes.c_char_p,
+        'GetControllerValue': ctypes.c_float,
+    }
+
     def __init__(self, dll_location=None):
         """
         Initializes the raildriver.dll interface.
@@ -22,3 +28,19 @@ class RailDriver(object):
             if not os.path.isfile(dll_location):
                 raise EnvironmentError('Unable to automatically locate raildriver.dll.')
         self.dll = ctypes.cdll.LoadLibrary(dll_location)
+        for function_name, restype in self._restypes.items():
+            getattr(self.dll, function_name).restype = restype
+
+    def __repr__(self):
+        return 'raildriver.RailDriver: {}'.format(self.dll)
+
+    def get_loco_name(self):
+        """
+        Returns the Provider, Product and Engine name.
+
+        :return list
+        """
+        ret_str = self.dll.GetLocoName()
+        if not ret_str:
+            return
+        return ret_str.split('.:.')
