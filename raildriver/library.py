@@ -34,6 +34,23 @@ class RailDriver(object):
     def __repr__(self):
         return 'raildriver.RailDriver: {}'.format(self.dll)
 
+    def get_controller_list(self):
+        """
+        Returns an iterable of tuples containing (index, controller_name) pairs.
+
+        Controller indexes start at 0.
+
+        You may easily transform this to a {name: index} mapping by using:
+
+        >>> controllers = {name: index for index, name in raildriver.get_controller_list()}
+
+        :return enumerate
+        """
+        ret_str = self.dll.GetControllerList()
+        if not ret_str:
+            return []
+        return enumerate(ret_str.split('::'))
+
     def get_loco_name(self):
         """
         Returns the Provider, Product and Engine name.
