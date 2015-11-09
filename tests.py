@@ -1,3 +1,4 @@
+import datetime
 import unittest
 
 import mock
@@ -64,6 +65,57 @@ class RailDriverGetCurrentControllerValue(AbstractRaildriverDllTestCase):
             with mock.patch.object(self.mock_dll, 'GetControllerList', return_value='Active::Throttle::Brake::Reverser'):
                 self.assertEqual(self.raildriver.get_current_controller_value('Throttle'), 0.5)
                 mock_gcv.assert_called_with(1, 0)
+
+
+class RailDriverGetCurrentCoordinates(AbstractRaildriverDllTestCase):
+
+    def test_get(self):
+        with mock.patch.object(self.mock_dll, 'GetControllerValue', side_effect=[51.50, -0.13]) as mock_gcv:
+            self.assertEqual(self.raildriver.get_current_coordinates(), (51.50, -0.13))
+            mock_gcv.assert_any_call(400, 0)
+            mock_gcv.assert_any_call(401, 0)
+
+
+class RailDriverGetCurrentFuelLevelTestCase(AbstractRaildriverDllTestCase):
+
+    def test_get(self):
+        with mock.patch.object(self.mock_dll, 'GetControllerValue', return_value=100) as mock_gcv:
+            self.assertEqual(self.raildriver.get_current_fuel_level(), 100)
+            mock_gcv.assert_called_with(402, 0)
+
+
+class RailDriverGetCurrentIsInTunnelLevelTestCase(AbstractRaildriverDllTestCase):
+
+    def test_get(self):
+        with mock.patch.object(self.mock_dll, 'GetControllerValue', return_value=1.0) as mock_gcv:
+            self.assertTrue(self.raildriver.get_current_is_in_tunnel())
+            mock_gcv.assert_called_with(403, 0)
+
+
+class RailDriverGetCurrentGradientTestCase(AbstractRaildriverDllTestCase):
+
+    def test_get(self):
+        with mock.patch.object(self.mock_dll, 'GetControllerValue', return_value=0.1) as mock_gcv:
+            self.assertEqual(self.raildriver.get_current_gradient(), 0.1)
+            mock_gcv.assert_called_with(404, 0)
+
+
+class RailDriverGetCurrentHeadingTestCase(AbstractRaildriverDllTestCase):
+
+    def test_get(self):
+        with mock.patch.object(self.mock_dll, 'GetControllerValue', return_value=0.1) as mock_gcv:
+            self.assertEqual(self.raildriver.get_current_heading(), 0.1)
+            mock_gcv.assert_called_with(405, 0)
+
+
+class RailDriverGetCurrentTime(AbstractRaildriverDllTestCase):
+
+    def test_get(self):
+        with mock.patch.object(self.mock_dll, 'GetControllerValue', side_effect=[12, 30, 0]) as mock_gcv:
+            self.assertEqual(self.raildriver.get_current_time(), datetime.time(12, 30, 0))
+            mock_gcv.assert_any_call(406, 0)
+            mock_gcv.assert_any_call(407, 0)
+            mock_gcv.assert_any_call(408, 0)
 
 
 class RailDriverGetLocoNameTestCase(AbstractRaildriverDllTestCase):

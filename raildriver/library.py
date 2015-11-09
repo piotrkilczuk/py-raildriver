@@ -1,4 +1,5 @@
 import ctypes
+import datetime
 import os
 import _winreg
 
@@ -43,6 +44,7 @@ class RailDriver(object):
         for idx, n in self.get_controller_list():
             if n == name:
                 return idx
+        raise ValueError('Controller index not found for {}'.format(name))
 
     def get_controller_list(self):
         """
@@ -77,10 +79,6 @@ class RailDriver(object):
             index = self.get_controller_index(index_or_name)
         else:
             index = index_or_name
-
-        if index is None:
-            raise ValueError('Controller index not found for {}'.format(index_or_name))
-
         return self.dll.GetControllerValue(index, value_type)
 
     def get_current_controller_value(self, index_or_name):
@@ -91,6 +89,55 @@ class RailDriver(object):
         :return: float
         """
         return self.get_controller_value(index_or_name, VALUE_CURRENT)
+
+    def get_current_coordinates(self):
+        """
+        Get current geocoordinates (lat, lon) of train
+
+        :return: tuple (lat, lon)
+        """
+        return self.get_current_controller_value(400), self.get_current_controller_value(401)
+
+    def get_current_fuel_level(self):
+        """
+        Get current fuel level of train
+
+        :return: float
+        """
+        return self.get_current_controller_value(402)
+
+    def get_current_gradient(self):
+        """
+        Get current gradient
+
+        return: float
+        """
+        return self.get_current_controller_value(404)
+
+    def get_current_heading(self):
+        """
+        Get current heading
+
+        return: float
+        """
+        return self.get_current_controller_value(405)
+
+    def get_current_is_in_tunnel(self):
+        """
+        Check if the train is currently (mostly) in tunnel
+
+        :return: bool
+        """
+        return bool(self.get_current_controller_value(403))
+
+    def get_current_time(self):
+        """
+        Get current time
+
+        :return: datetime.time
+        """
+        hms = [int(self.get_current_controller_value(i)) for i in range(406, 409)]
+        return datetime.time(*hms)
 
     def get_loco_name(self):
         """
