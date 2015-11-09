@@ -43,6 +43,7 @@ class RailDriver(object):
         for idx, n in self.get_controller_list():
             if n == name:
                 return idx
+        raise ValueError('Controller index not found for {}'.format(index_or_name))
 
     def get_controller_list(self):
         """
@@ -77,10 +78,6 @@ class RailDriver(object):
             index = self.get_controller_index(index_or_name)
         else:
             index = index_or_name
-
-        if index is None:
-            raise ValueError('Controller index not found for {}'.format(index_or_name))
-
         return self.dll.GetControllerValue(index, value_type)
 
     def get_current_controller_value(self, index_or_name):
@@ -107,6 +104,14 @@ class RailDriver(object):
         :return: float
         """
         return self.get_current_controller_value(402)
+
+    def get_current_gradient(self):
+        """
+        Get current gradient
+
+        return: float
+        """
+        return self.get_current_controller_value(404)
 
     def get_current_is_in_tunnel(self):
         """

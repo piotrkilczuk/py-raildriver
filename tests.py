@@ -75,7 +75,7 @@ class RailDriverGetCurrentCoordinates(AbstractRaildriverDllTestCase):
             mock_gcv.assert_any_call(401, 0)
 
 
-class RailDriverGetCurrentFuelLevel(AbstractRaildriverDllTestCase):
+class RailDriverGetCurrentFuelLevelTestCase(AbstractRaildriverDllTestCase):
 
     def test_get(self):
         with mock.patch.object(self.mock_dll, 'GetControllerValue', return_value=100) as mock_gcv:
@@ -83,12 +83,20 @@ class RailDriverGetCurrentFuelLevel(AbstractRaildriverDllTestCase):
             mock_gcv.assert_called_with(402, 0)
 
 
-class RailDriverGetCurrentFuelLevel(AbstractRaildriverDllTestCase):
+class RailDriverGetCurrentIsInTunnelLevelTestCase(AbstractRaildriverDllTestCase):
 
     def test_get(self):
         with mock.patch.object(self.mock_dll, 'GetControllerValue', return_value=1.0) as mock_gcv:
             self.assertTrue(self.raildriver.get_current_is_in_tunnel())
             mock_gcv.assert_called_with(403, 0)
+
+
+class RailDriverGetCurrentGradientTestCase(AbstractRaildriverDllTestCase):
+
+    def test_get(self):
+        with mock.patch.object(self.mock_dll, 'GetControllerValue', return_value=0.1) as mock_gcv:
+            self.assertEqual(self.raildriver.get_current_gradient(), 0.1)
+            mock_gcv.assert_called_with(404, 0)
 
 
 class RailDriverGetLocoNameTestCase(AbstractRaildriverDllTestCase):
