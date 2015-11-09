@@ -100,6 +100,14 @@ class RailDriver(object):
         """
         return self.get_current_controller_value(400), self.get_current_controller_value(401)
 
+    def get_current_fuel_level(self):
+        """
+        Get current fuel level of train
+
+        :return: float
+        """
+        return self.get_current_controller_value(402)
+
     def get_loco_name(self):
         """
         Returns the Provider, Product and Engine name.
