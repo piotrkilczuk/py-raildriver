@@ -99,6 +99,14 @@ class RailDriverGetCurrentGradientTestCase(AbstractRaildriverDllTestCase):
             mock_gcv.assert_called_with(404, 0)
 
 
+class RailDriverGetCurrentHeadingTestCase(AbstractRaildriverDllTestCase):
+
+    def test_get(self):
+        with mock.patch.object(self.mock_dll, 'GetControllerValue', return_value=0.1) as mock_gcv:
+            self.assertEqual(self.raildriver.get_current_heading(), 0.1)
+            mock_gcv.assert_called_with(405, 0)
+
+
 class RailDriverGetLocoNameTestCase(AbstractRaildriverDllTestCase):
 
     def test_returns_list_if_ready(self):

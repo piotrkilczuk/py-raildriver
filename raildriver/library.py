@@ -113,6 +113,14 @@ class RailDriver(object):
         """
         return self.get_current_controller_value(404)
 
+    def get_current_heading(self):
+        """
+        Get current heading
+
+        return: float
+        """
+        return self.get_current_controller_value(405)
+
     def get_current_is_in_tunnel(self):
         """
         Check if the train is currently (mostly) in tunnel
