@@ -4,7 +4,7 @@ py-raildriver
 .. image:: https://ci.appveyor.com/api/projects/status/1037swfb2ig31tuh/branch/master?svg=true
    :target: https://ci.appveyor.com/project/centralniak/py-raildriver
 
-Python interface to Train Simulator 2016. See `raildriver.RailDriver` docstrings for usage.
+Python interface to Train Simulator 2016. See ``raildriver.RailDriver`` docstrings for usage.
 
 Example
 -------
