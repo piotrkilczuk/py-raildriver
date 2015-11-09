@@ -118,3 +118,17 @@ class RailDriverInitTestCase(unittest.TestCase):
     def test_if_location_specified_uses_that(self, load_library):
         raildriver.RailDriver('C:\\Railworks\\raildriver.dll')
         load_library.assert_called_with('C:\\Railworks\\raildriver.dll')
+
+
+class RailDriverSetControllerValue(AbstractRaildriverDllTestCase):
+
+    def test_set_by_index(self):
+        with mock.patch.object(self.mock_dll, 'SetControllerValue') as mock_scv:
+            self.raildriver.set_controller_value(1, 0.5)
+            mock_scv.assert_called_with(1, 0.5)
+
+    def test_set_by_name(self):
+        with mock.patch.object(self.mock_dll, 'SetControllerValue') as mock_scv:
+            with mock.patch.object(self.mock_dll, 'GetControllerList', return_value='Active::Throttle::Brake::Reverser'):
+                self.raildriver.set_controller_value('Throttle', 0.5)
+                mock_scv.assert_called_with(1, 0.5)
