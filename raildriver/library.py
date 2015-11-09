@@ -108,6 +108,14 @@ class RailDriver(object):
         """
         return self.get_current_controller_value(402)
 
+    def get_current_is_in_tunnel(self):
+        """
+        Check if the train is currently (mostly) in tunnel
+
+        :return: bool
+        """
+        return bool(self.get_current_controller_value(403))
+
     def get_loco_name(self):
         """
         Returns the Provider, Product and Engine name.

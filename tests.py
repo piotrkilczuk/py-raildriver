@@ -83,6 +83,14 @@ class RailDriverGetCurrentFuelLevel(AbstractRaildriverDllTestCase):
             mock_gcv.assert_called_with(402, 0)
 
 
+class RailDriverGetCurrentFuelLevel(AbstractRaildriverDllTestCase):
+
+    def test_get(self):
+        with mock.patch.object(self.mock_dll, 'GetControllerValue', return_value=1.0) as mock_gcv:
+            self.assertTrue(self.raildriver.get_current_is_in_tunnel())
+            mock_gcv.assert_called_with(403, 0)
+
+
 class RailDriverGetLocoNameTestCase(AbstractRaildriverDllTestCase):
 
     def test_returns_list_if_ready(self):
