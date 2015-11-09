@@ -102,6 +102,15 @@ class RailDriver(object):
             return
         return ret_str.split('.:.')
 
+    def get_max_controller_value(self, index_or_name):
+        """
+        Syntactic sugar for get_controller_value(index_or_name, VALUE_MAX)
+
+        :param index_or_name integer index or string name
+        :return: float
+        """
+        return self.get_controller_value(index_or_name, VALUE_MAX)
+
     def get_min_controller_value(self, index_or_name):
         """
         Syntactic sugar for get_controller_value(index_or_name, VALUE_MIN)
