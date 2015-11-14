@@ -1,5 +1,6 @@
 import datetime
 import unittest
+import time
 
 import mock
 
@@ -15,6 +16,26 @@ class AbstractRaildriverDllTestCase(unittest.TestCase):
         with mock.patch('ctypes.cdll.LoadLibrary') as mock_dll:
             self.raildriver = raildriver.RailDriver('C:\\Railworks\\raildriver.dll')
             self.mock_dll = mock_dll.return_value
+
+
+class ListenerTestCase(AbstractRaildriverDllTestCase):
+
+    listener = None
+
+    def setUp(self):
+        super(ListenerTestCase, self).setUp()
+        self.listener = raildriver.events.Listener(self.raildriver, interval=0.1)
+
+    def test_current_and_previous_data(self):
+        with mock.patch.object(self.raildriver, 'get_current_controller_value', return_value=0.0) as mock_gcv:
+            self.listener.subscribe(['Reverser'])
+            self.listener.start()
+            time.sleep(0.05)
+            mock_gcv.return_value = 1.0
+            time.sleep(0.1)
+            self.listener.stop()
+        self.assertEqual(self.listener.previous_data['Reverser'], 0.0)
+        self.assertEqual(self.listener.current_data['Reverser'], 1.0)
 
 
 class RailDriverGetControllerListTestCase(AbstractRaildriverDllTestCase):
