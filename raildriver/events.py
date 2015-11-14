@@ -12,10 +12,11 @@ class Listener(object):
     interval = None
     running = False
     thread = None
+    subscribed_fields = []
 
     def __init__(self, raildriver, interval=0.5):
         """
-        TBD
+        Initialize control listener. Requires raildriver.RailDriver instance.
 
         :param raildriver: RailDriver instance
         :param interval: how often to check the state of controls
@@ -48,3 +49,21 @@ class Listener(object):
         TBD
         """
         self.running = False
+
+    def subscribe(self, field_names):
+        """
+        Subscribe to given fields.
+
+        Special fields cannot be subscribed to and will be checked on every iteration. These include:
+
+        * loco name
+        * coordinates
+        * fuel level
+        * gradient
+        * current heading
+        * is in tunnel
+        * time
+
+        :param field_names: list
+        """
+        self.subscribed_fields = field_names
