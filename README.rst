@@ -7,8 +7,8 @@ py-raildriver
 .. image:: https://codeclimate.com/github/centralniak/py-raildriver/badges/gpa.svg
    :target: https://codeclimate.com/github/centralniak/py-raildriver
 
-Python interface to Train Simulator 2016. The aim of this project is to ease communication with `raildriver.dll`
-provided with Train Simulator. You can find the original documentation for `raildriver.dll` in
+Python interface to Train Simulator 2016. The aim of this project is to ease communication with ``raildriver.dll``
+provided with Train Simulator. You can find the original documentation for ``raildriver.dll`` in
 `Matt Peddlesden's article on Engine Driver <http://bit.ly/raildriverdll>`_.
 
 py-raildriver has no external dependencies.
@@ -17,13 +17,13 @@ py-raildriver has no external dependencies.
 Installation
 ============
 
-#. `pip install py-raildriver`
+``pip install py-raildriver``
 
 
 Documentation
 =============
 
-See `raildriver.RailDriver` docstrings.
+See ``raildriver.RailDriver`` docstrings.
 
 
 Usage example
