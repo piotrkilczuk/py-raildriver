@@ -1,5 +1,6 @@
 import datetime
 import unittest
+import time
 
 import mock
 
@@ -15,6 +16,66 @@ class AbstractRaildriverDllTestCase(unittest.TestCase):
         with mock.patch('ctypes.cdll.LoadLibrary') as mock_dll:
             self.raildriver = raildriver.RailDriver('C:\\Railworks\\raildriver.dll')
             self.mock_dll = mock_dll.return_value
+
+
+class ListenerTestCase(AbstractRaildriverDllTestCase):
+
+    listener = None
+
+    def setUp(self):
+        super(ListenerTestCase, self).setUp()
+        self.listener = raildriver.events.Listener(self.raildriver, interval=0.1)
+
+    def test_current_and_previous_data(self):
+        with mock.patch.object(self.raildriver, 'get_current_controller_value', return_value=0.0) as mock_gcv:
+            self.listener.subscribe(['Reverser'])
+            self.listener.start()
+            time.sleep(0.05)
+            mock_gcv.return_value = 1.0
+            time.sleep(0.1)
+            self.listener.stop()
+        self.assertEqual(self.listener.previous_data['Reverser'], 0.0)
+        self.assertEqual(self.listener.current_data['Reverser'], 1.0)
+
+    def test_on_regular_field_change(self):
+        reverser_callback = mock.Mock()
+        with mock.patch.object(self.raildriver, 'get_current_controller_value', return_value=0.0) as mock_gcv:
+            self.listener.subscribe(['Reverser'])
+            self.listener.on_reverser_change(reverser_callback)
+            self.listener.start()
+            time.sleep(0.05)
+            mock_gcv.return_value = 1.0
+            time.sleep(0.1)
+            self.listener.stop()
+        reverser_callback.assert_called_with(1.0, 0.0)
+
+    def test_on_special_field_change(self):
+        coordinates_callback = mock.Mock()
+        fuel_level_callback = mock.Mock()
+        gradient_callback = mock.Mock()
+        heading_callback = mock.Mock()
+        is_in_tunnel_callback = mock.Mock()
+        loco_name_callback = mock.Mock()
+        time_callback = mock.Mock()
+        with mock.patch.object(self.raildriver, 'get_current_controller_value', return_value=0.0) as mock_gcv:
+            with mock.patch.object(self.raildriver, 'get_loco_name', return_value='Class 321'):
+                self.listener.on_coordinates_change(coordinates_callback)
+                self.listener.on_fuellevel_change(fuel_level_callback)
+                self.listener.on_gradient_change(gradient_callback)
+                self.listener.on_heading_change(heading_callback)
+                self.listener.on_isintunnel_change(is_in_tunnel_callback)
+                self.listener.on_loconame_change(loco_name_callback)
+                self.listener.on_time_change(time_callback)
+                self.listener.start()
+                time.sleep(0.05)
+                self.listener.stop()
+        coordinates_callback.assert_called_with((0.0, 0.0), None)
+        fuel_level_callback.assert_called_with(0.0, None)
+        gradient_callback.assert_called_with(0.0, None)
+        heading_callback.assert_called_with(0.0, None)
+        is_in_tunnel_callback.assert_called_with(0.0, None)
+        loco_name_callback.assert_called_with('Class 321', None)
+        time_callback.assert_called_with(datetime.time(0, 0, 0), None)
 
 
 class RailDriverGetControllerListTestCase(AbstractRaildriverDllTestCase):
