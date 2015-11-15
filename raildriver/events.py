@@ -8,14 +8,14 @@ class Listener(object):
 
     raildriver = None
 
-    bindings = collections.defaultdict(list)
+    bindings = None
     interval = None
     running = False
     thread = None
-    subscribed_fields = []
+    subscribed_fields = None
 
-    current_data = collections.defaultdict(lambda: None)
-    previous_data = collections.defaultdict(lambda: None)
+    current_data = None
+    previous_data = None
 
     special_fields = {
         '!Coordinates': 'get_current_coordinates',
@@ -36,6 +36,11 @@ class Listener(object):
         """
         self.interval = interval
         self.raildriver = raildriver
+
+        self.bindings = collections.defaultdict(list)
+        self.current_data = collections.defaultdict(lambda: None)
+        self.previous_data = collections.defaultdict(lambda: None)
+        self.subscribed_fields = []
 
     def __getattr__(self, item):
         return self.bindings[item].append
