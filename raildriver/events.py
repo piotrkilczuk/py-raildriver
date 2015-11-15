@@ -37,6 +37,9 @@ class Listener(object):
         self.interval = interval
         self.raildriver = raildriver
 
+    def __getattr__(self, item):
+        return self.bindings[item].append
+
     def _execute_bindings(self, type, *args, **kwargs):
         for binding in self.bindings[type]:
             binding(*args, **kwargs)
@@ -49,14 +52,14 @@ class Listener(object):
                 current_value = self.raildriver.get_current_controller_value(field_name)
                 self.current_data[field_name] = current_value
                 if current_value != self.previous_data[field_name]:
-                    binding_name = 'on_{}_change'.format(field_name)
+                    binding_name = 'on_{}_change'.format(field_name.lower())
                     self._execute_bindings(binding_name, current_value, self.previous_data[field_name])
 
             for field_name, method_name in self.special_fields.items():
                 current_value = getattr(self.raildriver, method_name)()
                 self.current_data[field_name] = current_value
                 if current_value != self.previous_data[field_name]:
-                    binding_name = 'on_{}_change'.format(field_name[1:])
+                    binding_name = 'on_{}_change'.format(field_name[1:].lower())
                     self._execute_bindings(binding_name, current_value, self.previous_data[field_name])
 
             time.sleep(self.interval)

@@ -37,6 +37,18 @@ class ListenerTestCase(AbstractRaildriverDllTestCase):
         self.assertEqual(self.listener.previous_data['Reverser'], 0.0)
         self.assertEqual(self.listener.current_data['Reverser'], 1.0)
 
+    def test_on_regular_field_change(self):
+        reverser_callback = mock.Mock()
+        with mock.patch.object(self.raildriver, 'get_current_controller_value', return_value=0.0) as mock_gcv:
+            self.listener.subscribe(['Reverser'])
+            self.listener.on_reverser_change(reverser_callback)
+            self.listener.start()
+            time.sleep(0.1)
+            mock_gcv.return_value = 1.0
+            time.sleep(0.1)
+            self.listener.stop()
+        reverser_callback.assert_called_with(1.0, 0.0)
+
 
 class RailDriverGetControllerListTestCase(AbstractRaildriverDllTestCase):
 
