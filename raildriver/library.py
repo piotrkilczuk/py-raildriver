@@ -179,4 +179,4 @@ class RailDriver(object):
             index = self.get_controller_index(index_or_name)
         else:
             index = index_or_name
-        self.dll.SetControllerValue(index, value)
+        self.dll.SetControllerValue(index, ctypes.c_float(value))

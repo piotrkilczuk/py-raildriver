@@ -1,3 +1,4 @@
+import ctypes
 import datetime
 import unittest
 import time
@@ -238,10 +239,18 @@ class RailDriverSetControllerValue(AbstractRaildriverDllTestCase):
     def test_set_by_index(self):
         with mock.patch.object(self.mock_dll, 'SetControllerValue') as mock_scv:
             self.raildriver.set_controller_value(1, 0.5)
-            mock_scv.assert_called_with(1, 0.5)
+            mock_calls = mock_scv.mock_calls
+            self.assertEqual(len(mock_calls), 1)
+            self.assertEqual(mock_calls[0][1][0], 1)
+            self.assertIsInstance(mock_calls[0][1][1], ctypes.c_float)
+            self.assertEqual(mock_calls[0][1][1].value, 0.5)
 
     def test_set_by_name(self):
         with mock.patch.object(self.mock_dll, 'SetControllerValue') as mock_scv:
             with mock.patch.object(self.mock_dll, 'GetControllerList', return_value='Active::Throttle::Brake::Reverser'):
                 self.raildriver.set_controller_value('Throttle', 0.5)
-                mock_scv.assert_called_with(1, 0.5)
+                mock_calls = mock_scv.mock_calls
+                self.assertEqual(len(mock_calls), 1)
+                self.assertEqual(mock_calls[0][1][0], 1)
+                self.assertIsInstance(mock_calls[0][1][1], ctypes.c_float)
+                self.assertEqual(mock_calls[0][1][1].value, 0.5)
