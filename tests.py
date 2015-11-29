@@ -254,3 +254,11 @@ class RailDriverSetControllerValue(AbstractRaildriverDllTestCase):
                 self.assertEqual(mock_calls[0][1][0], 1)
                 self.assertIsInstance(mock_calls[0][1][1], ctypes.c_float)
                 self.assertEqual(mock_calls[0][1][1].value, 0.5)
+
+
+class RailDriverSetRailDriverConnected(AbstractRaildriverDllTestCase):
+
+    def test_set(self):
+        with mock.patch.object(self.mock_dll, 'SetRailDriverConnected') as mock_srdc:
+            self.raildriver.set_rail_driver_connected(True)
+            mock_srdc.assert_called_with(True)

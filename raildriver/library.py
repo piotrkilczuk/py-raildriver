@@ -180,3 +180,9 @@ class RailDriver(object):
         else:
             index = index_or_name
         self.dll.SetControllerValue(index, ctypes.c_float(value))
+
+    def set_rail_driver_connected(self, value):
+        """
+        ???
+        """
+        self.dll.SetRailDriverConnected(True)
