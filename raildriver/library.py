@@ -183,6 +183,8 @@ class RailDriver(object):
 
     def set_rail_driver_connected(self, value):
         """
-        ???
+        Needs to be called after instantiation in order to exchange data with Train Simulator
+
+        :param bool True to start exchanging data, False to stop
         """
         self.dll.SetRailDriverConnected(True)

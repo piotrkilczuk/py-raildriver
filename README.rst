@@ -35,6 +35,7 @@ Start your Railworks.exe, get running, pause and try this in your Python console
 
     >>> import raildriver
     >>> rd = raildriver.RailDriver()
+    >>> rd.set_rail_driver_connected(True)  # start data exchange
     >>> assert 'SpeedometerMPH' in dict(rd.get_controller_list()).values(), 'SpeedometerMPH is not available on this loco'
     >>> rd.get_current_controller_value('SpeedometerMPH')
     50.004728991072624922
