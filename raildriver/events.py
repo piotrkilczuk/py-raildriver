@@ -9,6 +9,7 @@ class Listener(object):
     raildriver = None
 
     bindings = None
+    exc = None
     interval = None
     running = False
     thread = None
@@ -16,6 +17,7 @@ class Listener(object):
 
     current_data = None
     previous_data = None
+    iteration = 0
 
     special_fields = {
         '!Coordinates': 'get_current_coordinates',
@@ -49,25 +51,35 @@ class Listener(object):
         for binding in self.bindings[type]:
             binding(*args, **kwargs)
 
-    def _main_loop(self):
-        while self.running:
-            self.previous_data = copy.copy(self.current_data)
+    def _main_iteration(self):
+        self.iteration += 1
+        self.previous_data = copy.copy(self.current_data)
 
-            for field_name in self.subscribed_fields:
+        for field_name in self.subscribed_fields:
+            try:
                 current_value = self.raildriver.get_current_controller_value(field_name)
+            except ValueError:
+                del self.current_data[field_name]
+            else:
                 self.current_data[field_name] = current_value
-                if current_value != self.previous_data[field_name]:
+                if current_value != self.previous_data[field_name] and self.iteration > 1:
                     binding_name = 'on_{}_change'.format(field_name.lower())
                     self._execute_bindings(binding_name, current_value, self.previous_data[field_name])
 
-            for field_name, method_name in self.special_fields.items():
-                current_value = getattr(self.raildriver, method_name)()
-                self.current_data[field_name] = current_value
-                if current_value != self.previous_data[field_name]:
-                    binding_name = 'on_{}_change'.format(field_name[1:].lower())
-                    self._execute_bindings(binding_name, current_value, self.previous_data[field_name])
+        for field_name, method_name in self.special_fields.items():
+            current_value = getattr(self.raildriver, method_name)()
+            self.current_data[field_name] = current_value
+            if current_value != self.previous_data[field_name] and self.iteration > 1:
+                binding_name = 'on_{}_change'.format(field_name[1:].lower())
+                self._execute_bindings(binding_name, current_value, self.previous_data[field_name])
 
-            time.sleep(self.interval)
+    def _main_loop(self):
+        try:
+            while self.running:
+                self._main_iteration()
+                time.sleep(self.interval)
+        except Exception as exc:
+            self.exc = exc
 
     def start(self):
         """
@@ -100,6 +112,14 @@ class Listener(object):
 
         You can of course still receive notifications when those change.
 
+        It is important to understand that when the loco changes the set of possible controllers will likely change
+        too. Any missing field changes will stop triggering notifications.
+
         :param field_names: list
+        :raises ValueError if field is not present on current loco
         """
+        available_controls = dict(self.raildriver.get_controller_list()).values()
+        for field in field_names:
+            if field not in available_controls:
+                raise ValueError('Cannot subscribe to a missing controller {}'.format(field))
         self.subscribed_fields = field_names
