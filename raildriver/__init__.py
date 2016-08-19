@@ -2,4 +2,4 @@ from raildriver.library import *
 from raildriver import events
 
 
-VERSION = (1, 1, 3)
+VERSION = (1, 1, 4)
