@@ -20,7 +20,7 @@ setuptools.setup(
     author='Piotr Kilczuk',
     author_email='piotr@tymaszweb.pl',
     name='py-raildriver',
-    version='.'.join(str(v) for v in raildriver.VERSION),
+    version='1.1.5',
     description='Python interface to Train Simulator 2016',
     long_description=open(os.path.join(os.path.dirname(__file__), 'README.rst')).read(),
     url='https://github.com/centralniak/py-raildriver',
