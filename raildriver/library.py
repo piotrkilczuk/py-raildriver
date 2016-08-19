@@ -1,7 +1,8 @@
 import ctypes
 import datetime
 import os
-import _winreg
+
+from six.moves import winreg
 
 
 VALUE_CURRENT = 0
@@ -27,8 +28,8 @@ class RailDriver(object):
                             If not passed will try to guess the location by using the Windows Registry.
         """
         if not dll_location:
-            steam_key = _winreg.OpenKey(_winreg.HKEY_CURRENT_USER, 'Software\\Valve\\Steam')
-            steam_path = _winreg.QueryValueEx(steam_key, 'SteamPath')[0]
+            steam_key = winreg.OpenKey(winreg.HKEY_CURRENT_USER, 'Software\\Valve\\Steam')
+            steam_path = winreg.QueryValueEx(steam_key, 'SteamPath')[0]
             railworks_path = os.path.join(steam_path, 'steamApps', 'common', 'railworks', 'plugins')
             dll_location = os.path.join(railworks_path, 'raildriver.dll')
             if not os.path.isfile(dll_location):

@@ -27,6 +27,7 @@ setuptools.setup(
     license='MIT License',
     platforms=['Windows'],
     classifiers=CLASSIFIERS,
+    install_requires=open('requirements.txt').read(),
     tests_require=open('test_requirements.txt').read(),
     packages=setuptools.find_packages(),
     include_package_data=False,
