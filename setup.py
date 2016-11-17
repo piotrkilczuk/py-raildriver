@@ -3,8 +3,6 @@
 import os
 import setuptools
 
-import raildriver
-
 
 CLASSIFIERS = [
     'Development Status :: 5 - Production/Stable',

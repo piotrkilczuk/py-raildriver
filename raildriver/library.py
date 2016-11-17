@@ -62,7 +62,7 @@ class RailDriver(object):
         ret_str = self.dll.GetControllerList()
         if not ret_str:
             return []
-        return enumerate(ret_str.split('::'))
+        return enumerate(str(ret_str).split('::'))
 
     def get_controller_value(self, index_or_name, value_type):
         """
@@ -149,7 +149,7 @@ class RailDriver(object):
         ret_str = self.dll.GetLocoName()
         if not ret_str:
             return
-        return ret_str.split('.:.')
+        return str(ret_str).split('.:.')
 
     def get_max_controller_value(self, index_or_name):
         """
