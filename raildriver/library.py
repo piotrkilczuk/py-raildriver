@@ -59,10 +59,10 @@ class RailDriver(object):
 
         :return enumerate
         """
-        ret_str = self.dll.GetControllerList()
+        ret_str = self.dll.GetControllerList().decode()
         if not ret_str:
             return []
-        return enumerate(str(ret_str).split('::'))
+        return enumerate(ret_str.split('::'))
 
     def get_controller_value(self, index_or_name, value_type):
         """
@@ -146,10 +146,10 @@ class RailDriver(object):
 
         :return list
         """
-        ret_str = self.dll.GetLocoName()
+        ret_str = self.dll.GetLocoName().decode()
         if not ret_str:
             return
-        return str(ret_str).split('.:.')
+        return ret_str.split('.:.')
 
     def get_max_controller_value(self, index_or_name):
         """
