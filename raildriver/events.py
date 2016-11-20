@@ -3,6 +3,8 @@ import copy
 import threading
 import time
 
+import six
+
 
 class Listener(object):
 
