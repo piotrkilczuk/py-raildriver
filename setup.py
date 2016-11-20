@@ -18,7 +18,7 @@ setuptools.setup(
     author='Piotr Kilczuk',
     author_email='piotr@tymaszweb.pl',
     name='py-raildriver',
-    version='1.1.6',
+    version='1.1.7',
     description='Python interface to Train Simulator 2016',
     long_description=open(os.path.join(os.path.dirname(__file__), 'README.rst')).read(),
     url='https://github.com/centralniak/py-raildriver',
