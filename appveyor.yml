@@ -5,19 +5,15 @@ environment:
     - PYTHON: "C:\\Python27"
     - PYTHON: "C:\\Python33"
     - PYTHON: "C:\\Python34"
-    # no 3.5 until switched to py.test
+    - PYTHON: "C:\\Python35"
 
 install:
-- cmd: >-
-    SET PYTHONUSERBASE=venv
-
-    SET PATH=venv\\Scripts;%PYTHON%;%PYTHON%\\Scripts;%PATH%
-
-    pip install --user -U pip setuptools
-
-    pip install --user -r test_requirements.txt
+  - SET PYTHONUSERBASE=venv
+  - SET PATH=venv\\Python35\\Scripts;venv\\Scripts;%PYTHON%;%PYTHON%\\Scripts;%PATH%
+  - pip install --user -U pip setuptools
+  - pip install --user -r test_requirements.txt
 
 build: off
 
 test_script:
-    - "nosetests.exe"
+    - "pytest tests.py"
