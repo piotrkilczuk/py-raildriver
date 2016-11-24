@@ -16,4 +16,4 @@ install:
 build: off
 
 test_script:
-    - "pytest tests.py"
+    - "pytest"
